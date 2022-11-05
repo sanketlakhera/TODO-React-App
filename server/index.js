@@ -1,37 +1,40 @@
-
 const express = require("express");
+const cors = require('cors');
 const app = express();
 const PORT = 4000;
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// new imports
 const http = require('http').Server(app);
-const cors = require('cors');
-
-app.use(cors());
+const {Server} = require('socket.io');
 
 const socketIO = require('socket.io')(http, {
 	cors: {
-		origin: "https://localhost:3000"
-	}
+		origin: "http://localhost:3000",
+	},
 });
-socketIO.on('connection', (socket) => {
-	console.log(`=> ${socket.id} user just connected!`);
 
+let todoList = [];
+socketIO.on("connection", (socket) => {
+	console.log(`⚡: ${socket.id} user just connected!`);
+	
+	socket.on("addTodo", (todo) => {
+		console.log(todo);
+        //👇🏻 Adds the to-do object to the list of to-dos
+        todoList.unshift(todo);
+        //👇🏻 Sends all the to-dos to the React app
+        socket.emit("todos", todoList);	});
+	
 	socket.on('disconnect', () => {
 		socket.disonnect()
 		console.log(`* A user disonnected`);
 	});
 });
 
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.get("/api", (req,res) => {
-	res.json({
-		message: "Hello world",
-		});
+	res.json(todoList);
 	});
 
-app.listen(PORT, () => {
+http.listen(PORT, () => {
 	console.log(`Server listening on ${PORT}`);
 });
