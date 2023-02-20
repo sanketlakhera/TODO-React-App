@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@main
+        uses: sanketlakhera/TODO-React-App@main
       - name: Update diagram
         uses: sanketlakhera/TODO-React-App@main
         with:
