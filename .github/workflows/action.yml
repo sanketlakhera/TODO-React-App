@@ -11,6 +11,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@master
       - name: Update diagram
-        uses: sanketlakhera/TODO-React-App@latest
+        uses: sanketlakhera/TODO-React-App@main
         with:
           excluded_paths: "ignore,.github"
